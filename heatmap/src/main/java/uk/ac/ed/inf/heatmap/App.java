@@ -87,5 +87,6 @@ public class App
         	}
         }
         
+        System.out.println(grid);
     }
 }
