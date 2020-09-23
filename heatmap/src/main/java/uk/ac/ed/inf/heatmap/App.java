@@ -51,6 +51,41 @@ public class App
         	predictions.add((ArrayList<Integer>) fileLine.clone());
         }
         
+        class Polygon {
+        	public double fillOpacity = 0.75;
+        	public String rgbString;
+        	public String fill;
+        }
+        
+        ArrayList<Polygon> grid = new ArrayList<Polygon>();
+        for (int lineNum = 0; lineNum < predictions.size(); lineNum++) {
+        	for (int cellNum = 0; cellNum < predictions.get(lineNum).size(); cellNum++) {
+        		Integer prediction = predictions.get(lineNum).get(cellNum);
+        		
+        		Polygon poly = new Polygon();
+        		String colour = "";
+        		
+        		if (prediction < 32) {
+        			colour = "#00f00";
+        		} else if (prediction < 64) {
+        			colour = "#40ff00";
+        		} else if (prediction < 96) {
+        			colour = "#80ff00";
+        		} else if (prediction < 128) {
+        			colour = "#c0ff00";
+        		} else if (prediction < 160) {
+        			colour = "ffc000";
+        		} else if (prediction < 192) {
+        			colour = "ff8000";
+        		} else if (prediction < 224) {
+        			colour = "ff4000";
+        		} else if (prediction < 256) {
+        			colour = "ff0000";
+        		}
+        		poly.rgbString = colour;
+        		poly.fill = colour;
+        	}
+        }
         
     }
 }
