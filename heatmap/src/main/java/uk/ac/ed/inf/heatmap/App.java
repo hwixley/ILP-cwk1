@@ -8,7 +8,7 @@ public class App
     public static void main( String[] args ) throws Exception
     {	
     	//Retrieve predictions.txt as command line argument
-    	String predFilePath = "predictions.txt";//home/hwixley/Documents/Year3/ILP/cwk1/heatmap/src/main/java/uk/ac/ed/inf/heatmap/predictions.txt"; //args[0];
+    	String predFilePath = args[0];
         
     	//Read the predictions.txt file using BufferedReader
         File predFile = new File(System.getProperty("user.dir") + "/" + predFilePath);
