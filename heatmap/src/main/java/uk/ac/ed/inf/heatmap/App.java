@@ -108,6 +108,7 @@ public class App
         //Define the confinement area as 'mapArea'
         BoundingBox mapArea = BoundingBox.fromLngLats(minLng, minLat, maxLng, maxLat);
         
+        //Calculate the confinement areas of each cell in the grid, within the overall confinement area ('mapArea')
         for (int row  = 0; row < 10; row++) {
         	for (int col = 0; col < 10; col++) {
         		
