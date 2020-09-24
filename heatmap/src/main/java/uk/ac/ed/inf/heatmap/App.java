@@ -121,7 +121,8 @@ public class App
         		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + ", " + Double.toString(minLng + (col*cellLength)) + "],[";
         		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + ", " + Double.toString(minLng + ((col+1)*cellLength)) + "],[";
         		cellJson += Double.toString(maxLat - (row*cellHeight)) + ", " + Double.toString(minLng + ((col+1)*cellLength)) + "],[";
-        		cellJson += Double.toString(maxLat - (row*cellHeight)) + ", " + Double.toString(minLng + (col*cellHeight)) + "]]]},\n";
+        		cellJson += Double.toString(maxLat - (row*cellHeight)) + ", " + Double.toString(minLng + (col*cellHeight)) + "],[";
+        		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + ", " + Double.toString(minLng + (col*cellLength)) + "]]]},\n";
         		
         		if ((row == predictions.size()-1) && (col == predictions.size()-1)) {
         			cellJson += "\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}}";
