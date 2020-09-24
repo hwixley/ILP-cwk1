@@ -68,7 +68,7 @@ public class App
         double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
         double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
         
-        String geojsonText = "{\"type\"\t: \"FeatureCollection\",\n\"features\"\t: [";
+        String geojsonText = "{\"type\"\t: \"FeatureCollection\",\n\t\"features\"\t: [";
         
         //Define the overall confinement area as 'mapArea'
         BoundingBox mapArea = BoundingBox.fromLngLats(minLng, minLat, maxLng, maxLat);
@@ -117,16 +117,16 @@ public class App
         		//Add the classified prediction into the 'heatmapRow' ArrayList
         		heatmapRow.add(col, cell);
         		
-        		String cellJson = "{\"type\"\t: \"Feature\",\n\"geometry\"\t: {\"type\" : \"Polygon\",\n\"coordinates\" : [[";
+        		String cellJson = "\n\t{\"type\"\t\t: \"Feature\",\n\t\t\t\"geometry\"\t: {\"type\" : \"Polygon\",\n\t\t\t\t\"coordinates\" : [[";
         		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(maxLng + (col*cellLength)) + "],[";
         		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(maxLng + ((col+1)*cellLength)) + "],[";
         		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(maxLng + ((col+1)*cellLength)) + "],[";
         		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(maxLng + (col*cellHeight)) + "]]},\n";
         		
         		if ((row == predictions.size()-1) && (col == predictions.size()-1)) {
-        			cellJson += "\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : " + colour  + ", \"fill\" : " + colour + "}}";
+        			cellJson += "\t\t\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}}";
         		} else {
-        			cellJson += "\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : " + colour  + ", \"fill\" : " + colour + "}},";
+        			cellJson += "\t\t\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}},";
         		}
         		
         		
