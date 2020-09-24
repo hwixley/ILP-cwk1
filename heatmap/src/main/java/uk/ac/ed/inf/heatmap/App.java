@@ -129,9 +129,6 @@ public class App
         			cellJson += "\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}},";
         		}
         		
-        		
-        		
-        		
         		geojsonText += cellJson;
         	}
         	//Add the row of classified predictions ('heatmapRow') into the 'heatmap' ArrayList
