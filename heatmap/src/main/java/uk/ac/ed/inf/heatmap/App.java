@@ -9,7 +9,7 @@ public class App
 {
     public static void main( String[] args ) throws Exception
     {	
-    	//Retrieve predictions.txt as command line argument
+    	//Retrieve 'predictions.txt' as command line argument
     	String predFilePath = args[0];
         
     	//Read the predictions.txt file using BufferedReader
@@ -68,7 +68,7 @@ public class App
         double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
         double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
         
-        
+        String geojsonText = "{\"type\"\t: \"FeatureCollection\",\n\"features\"\t: [";
         
         //Define the overall confinement area as 'mapArea'
         BoundingBox mapArea = BoundingBox.fromLngLats(minLng, minLat, maxLng, maxLat);
@@ -116,6 +116,8 @@ public class App
 
         		//Add the classified prediction into the 'heatmapRow' ArrayList
         		heatmapRow.add(col, cell);
+        		
+        		String cellJson = "{\"type\"\t: \"Feature\",\n\"geometry\"\t: {\"type\" : \"Polygon\",\n\"coordinates\" : [";
         	}
         	//Add the row of classified predictions ('heatmapRow') into the 'heatmap' ArrayList
         	heatmap.add(row, (ArrayList<GridCell>) heatmapRow.clone());
