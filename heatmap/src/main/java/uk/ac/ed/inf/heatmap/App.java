@@ -117,16 +117,16 @@ public class App
         		//Add the classified prediction into the 'heatmapRow' ArrayList
         		heatmapRow.add(col, cell);
         		
-        		String cellJson = "\n\t{\"type\"\t\t: \"Feature\",\n\t\t\t\"geometry\"\t: {\"type\" : \"Polygon\",\n\t\t\t\t\"coordinates\" : [[";
-        		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(maxLng + (col*cellLength)) + "],[";
-        		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(maxLng + ((col+1)*cellLength)) + "],[";
-        		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(maxLng + ((col+1)*cellLength)) + "],[";
-        		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(maxLng + (col*cellHeight)) + "]]},\n";
+        		String cellJson = "\n\t{\"type\"\t\t: \"Feature\",\n\t\t\t\"geometry\"\t: {\"type\" : \"Polygon\",\n\t\t\t\t\"coordinates\" : [[[";
+        		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(minLng + (col*cellLength)) + "],[";
+        		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(minLng + ((col+1)*cellLength)) + "],[";
+        		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(minLng + ((col+1)*cellLength)) + "],[";
+        		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(minLng + (col*cellHeight)) + "]]]},\n";
         		
         		if ((row == predictions.size()-1) && (col == predictions.size()-1)) {
-        			cellJson += "\t\t\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}}";
+        			cellJson += "\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}}";
         		} else {
-        			cellJson += "\t\t\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}},";
+        			cellJson += "\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}},";
         		}
         		
         		
