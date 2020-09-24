@@ -102,5 +102,16 @@ public class App
         //Calculate the size of a cell for a 10x10 grid within our confinement area
         double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
         double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
+        
+        //Start GeoJSON formatting:
+        
+        //Define the confinement area as 'mapArea'
+        BoundingBox mapArea = BoundingBox.fromLngLats(minLng, minLat, maxLng, maxLat);
+        
+        for (int row  = 0; row < 10; row++) {
+        	for (int col = 0; col < 10; col++) {
+        		
+        	}
+        }
     }
 }
