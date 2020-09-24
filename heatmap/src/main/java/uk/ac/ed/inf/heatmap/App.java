@@ -121,7 +121,7 @@ public class App
         		cellJson += Double.toString(minLng + (col*cellLength)) + ", " + Double.toString(maxLat - ((row+1)*cellHeight))  + "],[";
         		cellJson += Double.toString(minLng + ((col+1)*cellLength)) + ", " + Double.toString(maxLat - ((row+1)*cellHeight)) + "],[";
         		cellJson += Double.toString(minLng + ((col+1)*cellLength)) + ", " + Double.toString(maxLat - (row*cellHeight)) + "],[";
-        		cellJson += Double.toString(minLng + (col*cellHeight)) + ", " + Double.toString(maxLat - (row*cellHeight)) + "],[";
+        		cellJson += Double.toString(minLng + (col*cellLength)) + ", " + Double.toString(maxLat - (row*cellHeight)) + "],[";
         		cellJson += Double.toString(minLng + (col*cellLength)) + ", " + Double.toString(maxLat - ((row+1)*cellHeight)) + "]]]},\n";
         		
         		if ((row == predictions.size()-1) && (col == predictions.size()-1)) {
