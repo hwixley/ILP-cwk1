@@ -53,19 +53,37 @@ public class App
         	predictions.add((ArrayList<Integer>) fileLine.clone());
         }
         
-        //public static Polygon poly = new Polygon();
+        //Define an object to store the relevant data for a given cell in the 10x10 grid
+        class GridCell {
+        	String rgbString;
+        	BoundingBox cellArea;
+        }
         
-        //Define colourGrid (heatmap): this will store the respective rgb-string values in each cell
-        ArrayList<ArrayList<String>> colourGrid = new ArrayList<ArrayList<String>>();
+        //Define the borders of our confinement area
+        double maxLat = 55.946233; 
+        double minLat = 55.942617;
+        double maxLng = -3.184319;
+        double minLng = -3.192473;
+        //Calculate the dimensions of a cell for a 10x10 grid within our confinement area
+        double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
+        double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
         
-        //Iterate through our nested 'predictions' ArrayList so we can classify each of the predictions
-        for (int lineNum = 0; lineNum < predictions.size(); lineNum++) {
-        	//Define colourLine: represents the row of cells at index 'lineNum' in the heatmap
-        	ArrayList<String> colourLine = new ArrayList<String>();
-        	colourLine.clear();
+        
+        
+        //Define the overall confinement area as 'mapArea'
+        BoundingBox mapArea = BoundingBox.fromLngLats(minLng, minLat, maxLng, maxLat);
+         
+        //Define heatmap: this will store the respective rgb-string and BoundingBox values in each cell
+        ArrayList<ArrayList<GridCell>> heatmap = new ArrayList<ArrayList<GridCell>>();
+        
+        //Iterate through our nested 'predictions' ArrayList so we can classify the predictions and calculate cell bounds
+        for (int row = 0; row < predictions.size(); row++) {
+        	//Define heatmapRow: represents the row of cells at index 'lineNum' in the 'heatmap'
+        	ArrayList<GridCell> heatmapRow = new ArrayList<GridCell>();
+        	heatmapRow.clear();
         	
-        	for (int cellNum = 0; cellNum < predictions.get(lineNum).size(); cellNum++) {
-        		Integer prediction = predictions.get(lineNum).get(cellNum);
+        	for (int col = 0; col < predictions.get(row).size(); col++) {
+        		Integer prediction = predictions.get(row).get(col);
         		
         		String colour = "";
         		
@@ -87,32 +105,21 @@ public class App
         		} else if (prediction < 256) {
         			colour = "#ff0000";
         		}
-        		//Add the classified prediction into the 'colourLine' ArrayList
-        		colourLine.add(cellNum, colour);
-        	}
-        	//Add the row of classified predictions ('colourLine') into the 'colourGrid' ArrayList
-        	colourGrid.add(lineNum, (ArrayList<String>) colourLine.clone());
-        }
-        
-        //Define the borders of our confinement area
-        double maxLat = 55.946233; 
-        double minLat = 55.942617;
-        double maxLng = -3.184319;
-        double minLng = -3.192473;
-        //Calculate the size of a cell for a 10x10 grid within our confinement area
-        double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
-        double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
-        
-        //Start GeoJSON formatting:
-        
-        //Define the confinement area as 'mapArea'
-        BoundingBox mapArea = BoundingBox.fromLngLats(minLng, minLat, maxLng, maxLat);
-        
-        //Calculate the confinement areas of each cell in the grid, within the overall confinement area ('mapArea')
-        for (int row  = 0; row < 10; row++) {
-        	for (int col = 0; col < 10; col++) {
         		
+        		//Calculate the confinement areas of each cell in the grid, within the overall confinement area ('mapArea')
+        		BoundingBox cellBounds = BoundingBox.fromLngLats(minLng + col*cellLength, maxLat - ((row+1)*cellHeight), minLng + ((col+1)*cellLength), maxLat + row*cellHeight);
+        		
+        		//Define the GridCell object and assign it
+        		GridCell cell = new GridCell();
+        		cell.rgbString = colour;
+        		cell.cellArea = cellBounds;
+
+        		//Add the classified prediction into the 'heatmapRow' ArrayList
+        		heatmapRow.add(col, cell);
         	}
+        	//Add the row of classified predictions ('heatmapRow') into the 'heatmap' ArrayList
+        	heatmap.add(row, (ArrayList<GridCell>) heatmapRow.clone());
         }
+        System.out.println(heatmap);
     }
 }
