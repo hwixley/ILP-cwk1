@@ -117,11 +117,36 @@ public class App
         		//Add the classified prediction into the 'heatmapRow' ArrayList
         		heatmapRow.add(col, cell);
         		
-        		String cellJson = "{\"type\"\t: \"Feature\",\n\"geometry\"\t: {\"type\" : \"Polygon\",\n\"coordinates\" : [";
+        		String cellJson = "{\"type\"\t: \"Feature\",\n\"geometry\"\t: {\"type\" : \"Polygon\",\n\"coordinates\" : [[";
+        		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(maxLng + (col*cellLength)) + "],[";
+        		cellJson += Double.toString(maxLat - ((row+1)*cellHeight)) + "," + Double.toString(maxLng + ((col+1)*cellLength)) + "],[";
+        		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(maxLng + ((col+1)*cellLength)) + "],[";
+        		cellJson += Double.toString(maxLat - (row*cellHeight)) + "," + Double.toString(maxLng + (col*cellHeight)) + "]]},\n";
+        		
+        		if ((row == predictions.size()-1) && (col == predictions.size()-1)) {
+        			cellJson += "\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : " + colour  + ", \"fill\" : " + colour + "}}";
+        		} else {
+        			cellJson += "\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : " + colour  + ", \"fill\" : " + colour + "}},";
+        		}
+        		
+        		
+        		
+        		
+        		geojsonText += cellJson;
         	}
         	//Add the row of classified predictions ('heatmapRow') into the 'heatmap' ArrayList
         	heatmap.add(row, (ArrayList<GridCell>) heatmapRow.clone());
         }
-        System.out.println(heatmap);
+        geojsonText += "\n\t]\n}";
+        //System.out.println(heatmap);
+        System.out.println(geojsonText);
+        
+        try {
+        	FileWriter writer = new FileWriter(System.getProperty("user.dir") + "/" + "heatmap.geojson");
+        	writer.write(geojsonText);
+        	writer.close();
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
     }
 }
