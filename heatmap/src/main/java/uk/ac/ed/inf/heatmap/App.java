@@ -89,7 +89,7 @@ public class App
         		
         		//Classify the given 'prediction' by returning it's appropriate rgb-string
         		if (prediction < 32) {
-        			colour = "#00f00";
+        			colour = "#00ff00";
         		} else if (prediction < 64) {
         			colour = "#40ff00";
         		} else if (prediction < 96) {
