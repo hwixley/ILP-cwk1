@@ -2,6 +2,7 @@ package uk.ac.ed.inf.heatmap;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.lang.*;
 import com.mapbox.geojson.*;
 
 public class App 
@@ -52,7 +53,7 @@ public class App
         	predictions.add((ArrayList<Integer>) fileLine.clone());
         }
         
-        
+        //public static Polygon poly = new Polygon();
         
         ArrayList<ArrayList<String>> colourGrid = new ArrayList<ArrayList<String>>();
         for (int lineNum = 0; lineNum < predictions.size(); lineNum++) {
@@ -87,6 +88,7 @@ public class App
         }
         
         System.out.println(colourGrid);
+        
         
         
     }
