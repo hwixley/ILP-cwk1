@@ -53,12 +53,6 @@ public class App
         	predictions.add((ArrayList<Integer>) fileLine.clone());
         }
         
-        //Define an object to store the relevant data for a given cell in the 10x10 grid
-        class GridCell {
-        	String rgbString;
-        	BoundingBox cellArea;
-        }
-        
         //Define the borders of our confinement area
         double maxLat = 55.946233; 
         double minLat = 55.942617;
@@ -68,20 +62,11 @@ public class App
         double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
         double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
         
+        //Initialize our Geo-JSON file in the format of a FeatureCollection with Polygon features
         String geojsonText = "{\"type\"\t: \"FeatureCollection\",\n\t\"features\"\t: [";
         
-        //Define the overall confinement area as 'mapArea'
-        BoundingBox mapArea = BoundingBox.fromLngLats(minLng, minLat, maxLng, maxLat);
-         
-        //Define heatmap: this will store the respective rgb-string and BoundingBox values in each cell
-        ArrayList<ArrayList<GridCell>> heatmap = new ArrayList<ArrayList<GridCell>>();
-        
-        //Iterate through our nested 'predictions' ArrayList so we can classify the predictions and calculate cell bounds
-        for (int row = 0; row < predictions.size(); row++) {
-        	//Define heatmapRow: represents the row of cells at index 'lineNum' in the 'heatmap'
-        	ArrayList<GridCell> heatmapRow = new ArrayList<GridCell>();
-        	heatmapRow.clear();
-        	
+        //Iterate through our 'predictions' ArrayList and append a Geo-JSON Polygon to 'geojsonText' for each prediction
+        for (int row = 0; row < predictions.size(); row++) {   	
         	for (int col = 0; col < predictions.get(row).size(); col++) {
         		Integer prediction = predictions.get(row).get(col);
         		
@@ -106,24 +91,22 @@ public class App
         			colour = "#ff0000";
         		}
         		
-        		//Calculate the confinement areas of each cell in the grid, within the overall confinement area ('mapArea')
-        		BoundingBox cellBounds = BoundingBox.fromLngLats(minLng + col*cellLength, maxLat - ((row+1)*cellHeight), minLng + ((col+1)*cellLength), maxLat + row*cellHeight);
-        		
-        		//Define the GridCell object and assign it
-        		GridCell cell = new GridCell();
-        		cell.rgbString = colour;
-        		cell.cellArea = cellBounds;
-
-        		//Add the classified prediction into the 'heatmapRow' ArrayList
-        		heatmapRow.add(col, cell);
-        		
+        		//Initialization text of a Geo-JSON Polygon feature
         		String cellJson = "\n\t{\"type\"\t\t: \"Feature\",\n\t\t\t\"geometry\"\t: {\"type\" : \"Polygon\",\n\t\t\t\t\"coordinates\" : [[[";
+        		
+        		//Add the coordinates of the polygon to represent the given cell:
+        		//South-West polygon corner
         		cellJson += Double.toString(minLng + (col*cellLength)) + ", " + Double.toString(maxLat - ((row+1)*cellHeight))  + "],[";
+        		//South-East polygon corner
         		cellJson += Double.toString(minLng + ((col+1)*cellLength)) + ", " + Double.toString(maxLat - ((row+1)*cellHeight)) + "],[";
+        		//North-East polygon corner
         		cellJson += Double.toString(minLng + ((col+1)*cellLength)) + ", " + Double.toString(maxLat - (row*cellHeight)) + "],[";
+        		//North-West polygon corner
         		cellJson += Double.toString(minLng + (col*cellLength)) + ", " + Double.toString(maxLat - (row*cellHeight)) + "],[";
+        		//South-West polygon corner (repeated in order to create a closed loop)
         		cellJson += Double.toString(minLng + (col*cellLength)) + ", " + Double.toString(maxLat - ((row+1)*cellHeight)) + "]]]},\n";
         		
+        		//Add the relevant properties to the given Geo-JSON Polygon feature
         		if ((row == predictions.size()-1) && (col == predictions.size()-1)) {
         			cellJson += "\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}}";
         		} else {
@@ -132,17 +115,16 @@ public class App
         		
         		geojsonText += cellJson;
         	}
-        	//Add the row of classified predictions ('heatmapRow') into the 'heatmap' ArrayList
-        	heatmap.add(row, (ArrayList<GridCell>) heatmapRow.clone());
         }
         geojsonText += "\n\t]\n}";
-        //System.out.println(heatmap);
-        System.out.println(geojsonText);
         
+        //Try write the 'geojsonText' to a file ('heatmap.geojson')
         try {
-        	FileWriter writer = new FileWriter(System.getProperty("user.dir") + "/" + "heatmap.geojson");
+        	FileWriter writer = new FileWriter(System.getProperty("user.dir") + "/heatmap.geojson");
         	writer.write(geojsonText);
         	writer.close();
+        	
+        	System.out.println("The air quality predictions from the input file (\"" + predFilePath + "\") have been formatted into a Geo-JSON map.\nGeo-JSON file path:\t" + System.getProperty("user.dir") + "/heatmap.geojson");
         } catch (IOException e) {
         	e.printStackTrace();
         }
