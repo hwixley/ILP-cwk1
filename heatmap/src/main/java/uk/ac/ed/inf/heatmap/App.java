@@ -2,6 +2,7 @@ package uk.ac.ed.inf.heatmap;
 
 import java.io.*;
 import java.util.ArrayList;
+import com.mapbox.geojson.*;
 
 public class App 
 {
@@ -50,6 +51,7 @@ public class App
         	//All predictions for the given line ('fileLine') have been parsed as Integers and added to 'predictions'
         	predictions.add((ArrayList<Integer>) fileLine.clone());
         }
+        
         
         
         ArrayList<ArrayList<String>> colourGrid = new ArrayList<ArrayList<String>>();
