@@ -55,8 +55,12 @@ public class App
         
         //public static Polygon poly = new Polygon();
         
+        //Define colourGrid (heatmap): this will store the respective rgb-string values in each cell
         ArrayList<ArrayList<String>> colourGrid = new ArrayList<ArrayList<String>>();
+        
+        //Iterate through our nested 'predictions' ArrayList so we can classify each of the predictions
         for (int lineNum = 0; lineNum < predictions.size(); lineNum++) {
+        	//Define colourLine: represents the row of cells at index 'lineNum' in the heatmap
         	ArrayList<String> colourLine = new ArrayList<String>();
         	colourLine.clear();
         	
@@ -65,6 +69,7 @@ public class App
         		
         		String colour = "";
         		
+        		//Classify the given 'prediction' by returning it's appropriate rgb-string
         		if (prediction < 32) {
         			colour = "#00f00";
         		} else if (prediction < 64) {
@@ -82,14 +87,20 @@ public class App
         		} else if (prediction < 256) {
         			colour = "#ff0000";
         		}
+        		//Add the classified prediction into the 'colourLine' ArrayList
         		colourLine.add(cellNum, colour);
         	}
+        	//Add the row of classified predictions ('colourLine') into the 'colourGrid' ArrayList
         	colourGrid.add(lineNum, (ArrayList<String>) colourLine.clone());
         }
         
-        System.out.println(colourGrid);
-        
-        
-        
+        //Define the borders of our confinement area
+        double maxLat = 55.946233; 
+        double minLat = 55.942617;
+        double maxLng = -3.184319;
+        double minLng = -3.192473;
+        //Calculate the size of a cell for a 10x10 grid within our confinement area
+        double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
+        double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
     }
 }
