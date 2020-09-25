@@ -12,15 +12,15 @@ public class App
     	//Retrieve 'predictions.txt' as command line argument
     	String predFilePath = args[0];
         
-    	//Read the predictions.txt file using BufferedReader
+    	//Read the 'predictions.txt' file using BufferedReader
         File predFile = new File(System.getProperty("user.dir") + "/" + predFilePath);
         BufferedReader br = new BufferedReader(new FileReader(predFile));
         
-        //Create ArrayLists to store the predictions.txt data
+        //Create ArrayLists to store the 'predictions.txt' data
         ArrayList<ArrayList<Integer>> predictions = new ArrayList<ArrayList<Integer>>();
         ArrayList<Integer> fileLine = new ArrayList<Integer>();
         
-        //Iterate through the lines of the predictions.txt file and store them as Integers in the 'predictions' ArrayList
+        //Iterate through the lines of the 'predictions.txt' file and store them as Integers in the 'predictions' ArrayList
         String line;
         while ((line = br.readLine()) != null) {
         	fileLine.clear();
@@ -42,6 +42,8 @@ public class App
             		fileLine.add(Integer.parseInt(subString));
         			lineEnd = true;
         			break;
+        			
+        		//Else we continue iterating through the predictions on the given line
         		} else {
             		subString = restOfLine.substring(startIndex, commaIndex);
             		fileLine.add(Integer.parseInt(subString));
@@ -58,7 +60,7 @@ public class App
         double minLat = 55.942617;
         double maxLng = -3.184319;
         double minLng = -3.192473;
-        //Calculate the dimensions of a cell for a 10x10 grid within our confinement area
+        //Calculate the dimensions of a rectangular cell in a 10x10 grid within our confinement area
         double cellLength = Math.abs((maxLng - minLng) / 10); // = 8.154 x 10^-4
         double cellHeight = Math.abs((maxLat - minLat) / 10); // = 3.616 x 10^-4
         
@@ -106,16 +108,17 @@ public class App
         		//South-West polygon corner (repeated in order to create a closed loop)
         		cellJson += Double.toString(minLng + (col*cellLength)) + ", " + Double.toString(maxLat - ((row+1)*cellHeight)) + "]]]},\n";
         		
-        		//Add the relevant properties to the given Geo-JSON Polygon feature
+        		//Add the relevant properties (fill-opacity, rgb-string, fill) to the given Geo-JSON Polygon feature
         		if ((row == predictions.size()-1) && (col == predictions.size()-1)) {
         			cellJson += "\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}}";
         		} else {
         			cellJson += "\t\t\t\"properties\"\t: {\"fill-opacity\" : 0.75, \"rgb-string\" : \"" + colour  + "\", \"fill\" : \"" + colour + "\"}},";
         		}
-        		
+        		//Add this Polygon feature to the FeatureCollection in our Geo-JSON file
         		geojsonText += cellJson;
         	}
         }
+        //Add the closing brackets for our FeatureCollection in our Geo-JSON file
         geojsonText += "\n\t]\n}";
         
         //Try write the 'geojsonText' to a file ('heatmap.geojson')
@@ -123,9 +126,11 @@ public class App
         	FileWriter writer = new FileWriter(System.getProperty("user.dir") + "/heatmap.geojson");
         	writer.write(geojsonText);
         	writer.close();
-        	
+        	//Success writing to file 'heatmap.geojson'
         	System.out.println("The air quality predictions from the input file (\"" + predFilePath + "\") have been formatted into a Geo-JSON map.\nGeo-JSON file path:\t" + System.getProperty("user.dir") + "/heatmap.geojson");
+        	
         } catch (IOException e) {
+        	//Failure writing to file 'heatmap.geojson'
         	e.printStackTrace();
         }
     }
